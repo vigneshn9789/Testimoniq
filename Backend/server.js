@@ -282,7 +282,7 @@ app.post('/createproducts', parser.array('images', 5), (req, res) => {
                 const name= data[0].name;
                 const id=data[0].id;
                 // console.log("input data : "+data[0].id);
-                const token=jwt.sign({name,id:id},"jwt-secret-key",{expiresIn:'1d'});
+                const token=jwt.sign({name,id:id},process.env.JWT_SECRET_KEY,{expiresIn:'1d'});
                 // res.cookie('token',token);
                 // res.cookie('token', token, { httpOnly: true, sameSite: 'Strict' });
 
@@ -350,7 +350,7 @@ const verifyUser=(req,res,next)=>{
    if(!token){
     return res.json({Error:"you are not athenticated"})
    }else{
-    jwt.verify(token,"jwt-secret-key",(err,decoded)=>{
+    jwt.verify(token,process.env.JWT_SECRET_KEY,(err,decoded)=>{
         if(err){
             return res.json({Error:"Token error"})
         }else{
@@ -381,7 +381,7 @@ app.get("/logout",(req,res)=>{
 })
 
 app.post("/usermessage",(req,res)=>{
-    console.log("hell  "+req.body.email);
+  //  console.log("hell  "+req.body.email);
 
     sql="insert into user_messages (full_name,email,subject,message) values (?)";
     const value=[
@@ -404,7 +404,7 @@ db.query(sql,[value],(err,result)=>{
 })
 
 
-app.listen(8000,()=>{
+app.listen(process.env.PORT,()=>{
     console.log("backend started");
 })
 

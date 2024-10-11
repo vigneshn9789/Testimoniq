@@ -90,7 +90,7 @@ function Navbar() {
   const handleLogout = () => {
     axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/logout`)
       .then(() => {
-        toast.success("LoggedOut successfully!",{ position: "top-center" });
+        toast.success("Logged Out successfully!",{ position: "top-center" });
         logoutUser();
         navigate("/login");
       })
