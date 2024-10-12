@@ -258,56 +258,6 @@ app.post('/createproducts', parser.array('images', 5), (req, res) => {
 
   
 
-  app.post("/login",(req,res)=>{
-    // console.log(req.body);
-    const sql="select * from Users where email= ?";
-
-    db.query(sql,[req.body.email],(err,data)=>{
-        
-        if(err) {
-            console.error("Database query error:", err);
-            return res.json({ Error: "Internal Server Error" });
-        }
-
-        if(data.length>0){
-          bcrypt.compare(req.body.password,data[0].password,(err,response)=>{
-
-            if(err){
-                console.error("Bcrypt compare error:", err);
-                return res.json({ Error: "Internal Server Error" });
-                
-            }
-
-            if(response){
-                const name= data[0].name;
-                const id=data[0].id;
-                // console.log("input data : "+data[0].id);
-                const token=jwt.sign({name,id:id},process.env.JWT_SECRET_KEY,{expiresIn:'1d'});
-                // res.cookie('token',token);
-                // res.cookie('token', token, { httpOnly: true, sameSite: 'Strict' });
-
-          
-res.cookie('token', token, { 
-    httpOnly: true, 
-    sameSite: 'Lax', // Changed from 'Strict' to 'Lax'
-    // secure: true, // Uncomment this if using HTTPS
-});
-
-
-                return res.json({Status:"Success"})
-            }else{
-                return res.status(400).json({Error:"password mismatch"})
-            }
-          })
-        }else{
-            return res.status(400).json({ Error: "No email exists" });
-        }
-    });
-
-  });
-
-
-
 
 
 app.post("/signup",(req,res)=>{
@@ -343,42 +293,166 @@ app.post("/signup",(req,res)=>{
     });
 });
 
-const verifyUser=(req,res,next)=>{
+
+
+
+// app.post("/login",(req,res)=>{
+//   // console.log(req.body);
+//   const sql="select * from Users where email= ?";
+
+//   db.query(sql,[req.body.email],(err,data)=>{
+      
+//       if(err) {
+//           console.error("Database query error:", err);
+//           return res.json({ Error: "Internal Server Error" });
+//       }
+
+//       if(data.length>0){
+//         bcrypt.compare(req.body.password,data[0].password,(err,response)=>{
+
+//           if(err){
+//               console.error("Bcrypt compare error:", err);
+//               return res.json({ Error: "Internal Server Error" });
+              
+//           }
+
+//           if(response){
+//               const name= data[0].name;
+//               const id=data[0].id;
+//               // console.log("input data : "+data[0].id);
+//               const token=jwt.sign({name,id:id},process.env.JWT_SECRET_KEY,{expiresIn:'1d'});
+//               // res.cookie('token',token);
+//               // res.cookie('token', token, { httpOnly: true, sameSite: 'Strict' });
+
+        
+// res.cookie('token', token, { 
+//   httpOnly: true, 
+//   sameSite: 'Lax', // Changed from 'Strict' to 'Lax'
+//   // secure: true, // Uncomment this if using HTTPS
+// });
+
+
+//               return res.json({Status:"Success"})
+//           }else{
+//               return res.status(400).json({Error:"password mismatch"})
+//           }
+//         })
+//       }else{
+//           return res.status(400).json({ Error: "No email exists" });
+//       }
+//   });
+
+// });
+
+
+
+
+// const verifyUser=(req,res,next)=>{
    
-   const token = req.cookies.token;
-   // console.log("Received Token:", token);
-   if(!token){
-    return res.json({Error:"you are not athenticated"})
-   }else{
-    jwt.verify(token,process.env.JWT_SECRET_KEY,(err,decoded)=>{
-        if(err){
-            return res.json({Error:"Token error"})
-        }else{
-           req.name=decoded.name;
-            req.id=decoded.id;
+//    const token = req.cookies.token;
+//    // console.log("Received Token:", token);
+//    if(!token){
+//     return res.json({Error:"you are not athenticated"})
+//    }else{
+//     jwt.verify(token,process.env.JWT_SECRET_KEY,(err,decoded)=>{
+//         if(err){
+//             return res.json({Error:"Token error"})
+//         }else{
+//            req.name=decoded.name;
+//             req.id=decoded.id;
            
-            next(); 
-        }
-    })
-   }
-}
+//             next(); 
+//         }
+//     })
+//    }
+// }
 
 
-app.get("/dashboard",verifyUser,(req,res)=>{
-    return res.json({Status:"Success",name:req.name,id:req.id})
-})
+// app.get("/dashboard",verifyUser,(req,res)=>{
+//     return res.json({Status:"Success",name:req.name,id:req.id})
+// })
 
-
-
-app.get("/me", verifyUser, (req, res) => {
-    return res.json({ Status: "Success", name: req.name });
-  });
   
 
-app.get("/logout",(req,res)=>{
-    res.clearCookie('token');
-    return res.json({Status:"Success"});
+// app.get("/logout",(req,res)=>{
+//     res.clearCookie('token');
+//     return res.json({Status:"Success"});
+// })
+
+
+
+app.post("/login", (req, res) => {
+  const sql = "SELECT * FROM Users WHERE email = ?";
+  
+  db.query(sql, [req.body.email], (err, data) => {
+    if (err) {
+      console.error("Database query error:", err);
+      return res.status(500).json({ Error: "Internal Server Error" });
+    }
+
+    if (data.length > 0) {
+      bcrypt.compare(req.body.password, data[0].password, (err, isMatch) => {
+        if (err) {
+          console.error("Bcrypt compare error:", err);
+          return res.status(500).json({ Error: "Internal Server Error" });
+        }
+
+        if (isMatch) {
+          const { name, id } = data[0];
+          const token = jwt.sign({ name, id }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
+
+          res.cookie('token', token, { 
+            httpOnly: true, 
+            sameSite: 'None', // Must be 'None' for cross-site cookies
+            secure: true, // Must be true if sameSite is 'None' and served over HTTPS
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+          });
+
+          return res.status(200).json({ Status: "Success" });
+        } else {
+          return res.status(400).json({ Error: "Password mismatch" });
+        }
+      });
+    } else {
+      return res.status(400).json({ Error: "No email exists" });
+    }
+  });
+});
+
+
+
+const verifyUser = (req, res, next) => {
+  const token = req.cookies.token;
+  
+  if (!token) {
+    return res.status(401).json({ Error: "You are not authenticated" });
+  } else {
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ Error: "Token error" });
+      } else {
+        req.name = decoded.name;
+        req.id = decoded.id;
+        next(); 
+      }
+    });
+  }
+};
+
+app.get("/dashboard",verifyUser,(req,res)=>{
+  return res.json({Status:"Success",name:req.name,id:req.id})
 })
+
+
+app.get("/logout", (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    sameSite: 'None',
+    secure: true,
+  });
+  return res.json({ Status: "Success" });
+});
+
 
 app.post("/usermessage",(req,res)=>{
   //  console.log("hell  "+req.body.email);
