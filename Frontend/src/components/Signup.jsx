@@ -35,10 +35,6 @@ function Signup() {
             toast.error("EmailId already exists.", {
               position: "top-center",
             });
-          } else {
-            toast.error("Error signing up, please try again.", {
-              position: "top-center",
-            });
           }
         } else if (err.request) {
           // Network error or backend unavailable
