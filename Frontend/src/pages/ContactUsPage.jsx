@@ -36,10 +36,16 @@ function ContactUsPage() {
     })
     .catch((err)=>{
 
-       toast.error("please try again.",{
-            
-        position: "top-center",
-    });
+      if (err.request) {
+        toast.error("Our services are currently paused by Vignesh for maintenance. Please contact Vignesh for further information.", {
+          duration: 5000,
+          position: "top-center",
+        });
+      } else {
+        toast.error('Unexpected error. Please try again.', {
+          position: 'top-center',
+        });
+      }
     })
   }
 
@@ -136,19 +142,19 @@ function ContactUsPage() {
                 <svg className="w-6 h-6 text-blue-500 mr-3" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M21 8.09V7A2 2 0 0 0 19 5h-2a2 2 0 0 0-2 2v1H9V7A2 2 0 0 0 7 5H5A2 2 0 0 0 3 7v1.09C3 12.42 6.42 15 10.14 16.66L11 17a1.18 1.18 0 0 1 0 2.16L8.41 22a1.18 1.18 0 0 0 .58 2.18c2.36 0 4.72-.66 6.86-1.89A12.12 12.12 0 0 0 21 8.09z" />
                 </svg>
-                <span className="text-gray-700 font-medium">Phone: 1234567890</span>
+                <span className="text-gray-700 font-medium">Phone: 8838371640</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-6 h-6 text-blue-500 mr-3" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M4.5 20h15a2.5 2.5 0 0 0 2.5-2.5v-11a2.5 2.5 0 0 0-2.5-2.5h-15A2.5 2.5 0 0 0 2 6.5v11A2.5 2.5 0 0 0 4.5 20zM20 6.5a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-15a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5h15z" />
                 </svg>
-                <span className="text-gray-700 font-medium">Email: contact@vtest.com</span>
+                <span className="text-gray-700 font-medium">Email: vigneshn9789@gmail.com</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-6 h-6 text-blue-500 mr-3" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2.25C6.48 2.25 2.25 6.48 2.25 12S6.48 21.75 12 21.75 21.75 17.52 21.75 12 17.52 2.25 12 2.25zm0 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zm0-12a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 12 8.25zm0 4.75h-.75a.75.75 0 0 0-.75.75v3.75h3v-3.75a.75.75 0 0 0-.75-.75H12z" />
                 </svg>
-                <span className="text-gray-700 font-medium">Address: karur</span>
+                <span className="text-gray-700 font-medium">Address: Karur</span>
               </div>
             </div>
 

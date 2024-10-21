@@ -48,23 +48,28 @@ function Login() {
       }
    
     })
-
     .catch((err) => {
-
-      if (err.response && err.response.status === 400) {
-        toast.error(err.response.data.Error || "Invalid credentials", { position: "top-center" });
-      }else{
-        //toast.error("An error occurred. Please try again",{ position: "top-center",});
+      if (err.response) {
+        // Handle error response from the server
+        if (err.response.status === 400) {
+          toast.error(err.response.data.Error || "Invalid credentials", { position: "top-center" });
+        } else {
+          toast.error("An error occurred. Please try again.", { position: "top-center" });
+        }
+      } else if (err.request) {
+        // Network or server error (when backend is not available)
         toast.error("Our services are currently paused by Vignesh for maintenance. Please contact Vignesh for further information.", {
           duration: 5000,
-          position: "top-right",
+          position: "top-center",
         });
-        
-        console.error("Error login user:", err);
-      } 
-        
-      
+      } else {
+        // Other errors
+        toast.error("An unexpected error occurred. Please try again.", { position: "top-center" });
+      }
+
+      console.error("Error login user:", err);
     });
+
   };
 
   return (

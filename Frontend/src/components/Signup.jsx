@@ -27,21 +27,32 @@ function Signup() {
         }
      
       })
-      .catch(err => {
-        if (err.response && err.response.status === 400) {
-          // This will handle the "duplicate email" error from the backend
-          toast.error("EmailId already exist ",{
-            
-            position: "top-center",
-        });
 
-        } else {
-          console.error("Error registering user:", err);
-          toast.error("Error signing up, please try again.",{
-            
+      .catch(err => {
+        if (err.response) {
+          // Handle error response from backend
+          if (err.response.status === 400) {
+            toast.error("EmailId already exists.", {
+              position: "top-center",
+            });
+          } else {
+            toast.error("Error signing up, please try again.", {
+              position: "top-center",
+            });
+          }
+        } else if (err.request) {
+          // Network error or backend unavailable
+          toast.error("Our services are currently paused by Vignesh for maintenance. Please contact Vignesh for further information.", {
+            duration: 5000,
             position: "top-center",
-        });
+          });
+        } else {
+          // Other errors
+          toast.error("An unexpected error occurred. Please try again.", {
+            position: "top-center",
+          });
         }
+        console.error("Error registering user:", err);
       });
     };
 
