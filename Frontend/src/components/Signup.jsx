@@ -36,7 +36,8 @@ function Signup() {
               position: "top-center",
             });
           }
-        } else if (err.request) {
+        } 
+         if (err.request) {
           // Network error or backend unavailable
           toast.error("Our services are currently paused by Vignesh for maintenance. Please contact Vignesh for further information.", {
             duration: 5000,

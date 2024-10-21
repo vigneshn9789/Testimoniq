@@ -54,7 +54,8 @@ function Login() {
         if (err.response.status === 400) {
           toast.error(err.response.data.Error || "Invalid credentials", { position: "top-center" });
         }
-      } else if (err.request) {
+      } 
+      if (err.request) {
         // Network or server error (when backend is not available)
         toast.error("Our services are currently paused by Vignesh for maintenance. Please contact Vignesh for further information.", {
           duration: 5000,
