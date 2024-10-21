@@ -54,7 +54,12 @@ function Login() {
       if (err.response && err.response.status === 400) {
         toast.error(err.response.data.Error || "Invalid credentials", { position: "top-center" });
       }else{
-        toast.error("An error occurred. Please try again",{ position: "top-center",});
+        //toast.error("An error occurred. Please try again",{ position: "top-center",});
+        toast.error("Our services are currently paused by Vignesh for maintenance. Please contact Vignesh for further information.", {
+          duration: 5000,
+          position: "top-right",
+        });
+        
         console.error("Error login user:", err);
       } 
         
