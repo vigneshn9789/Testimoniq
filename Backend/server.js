@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 dotenv.config();
 
 app.use(cors({
-  origin: [process.env.CLIENT_URL], // Use environment variable here
+  origin: [process.env.CLIENT_URL,process.env.CLIENT2_URL], // Use environment variable here
   methods: ['GET', 'POST', 'DELETE'], 
      credentials:true,
 }));
